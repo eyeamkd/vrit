@@ -2,11 +2,12 @@ import React from 'react';
 import { ScrollView, StyleSheet, View, Text, Picker, AppState, TextInput  } from 'react-native';
 import { Notifications } from 'expo'; 
 import * as Permissions from 'expo-permissions';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler'; 
+import launchCheck from '../utils/launchCheck';
 
 const PUSH_REGISTRATION_ENDPOINT = 'http://26523884.ngrok.io/notifications/token';  
-const MESSAGE_ENDPOINT = 'http://26523884.ngrok.io/notifications/message'; 
-
+const MESSAGE_ENDPOINT = 'http://26523884.ngrok.io/notifications/message';  
+const HAS_LAUNCHED =  'hasLaunched';
 
 export default class LinksScreen extends React.Component {   
   constructor(props){  
@@ -14,20 +15,27 @@ export default class LinksScreen extends React.Component {
     this.handleAppStateChange=this.handleAppStateChange.bind(this);
     this.state={ 
     notification:null,
-    messageText:'' 
+    messageText:'',
+    firstLaunch:'', 
+    checkedAsyncStorage:false
   }
   } 
   componentDidMount(){ 
     AppState.addEventListener('change',this.handleAppStateChange); 
     this.registerForNotificationsAysnc();
   } 
-  componentWillMount(){ 
-    AppState.removeEventListener('change',this.handleAppStateChange);
+  async componentWillMount(){ 
+    AppState.removeEventListener('change',this.handleAppStateChange); 
+    const isFirstLaunch = await launchCheck();  
+    this.setState({ 
+      firstLaunch:isFirstLaunch, 
+      checkedAsyncStorage:true 
+  });
   }  
   welcomeNotification=()=>{  
     const AttendanceCalculationNotification = { 
-      title:'Today\'s Classes Update!',
-      body:'Check out the classes that you have attended today, so that VRIT can keep your attendance upto date', 
+      title:'Welcome to VRIT',
+      body:'', 
       sound:'true',
       priority:'high',
       vibrate:'true'
@@ -88,7 +96,9 @@ export default class LinksScreen extends React.Component {
     this.setState({messageText:''});
   }
   render(){  
-    this.welcomeNotification();
+    const { checkedAsyncStorage, firstLaunch } = this.state;  
+    if(firstLaunch)
+      this.welcomeNotification();
     return (
       <View style={styles.container}>  
         <TextInput 
