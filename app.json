@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "V.R.I.T",
-    "slug": "VRIT",
+    "name": "VRIT",
+    "slug": "VRIT", 
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
