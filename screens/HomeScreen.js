@@ -1,16 +1,21 @@
 import React from 'react';  
-import {View,StyleSheet } from 'react-native'; 
+import {View,StyleSheet, Text } from 'react-native'; 
 import Signin from '../components/Signin/Signin';
+import Dashboard from '../components/Dashboard';
 
 export default class HomeScreen extends React.Component{ 
   render(){ 
     return( 
       <View style={styles.mainStyle}>  
-        <Signin/>
+        <Dashboard/>
       </View>
     );
   }
-} 
+}  
+
+HomeScreen.navigationOptions = {
+  title: 'Your Profile',
+};
 
 const styles = StyleSheet.create({ 
   mainStyle:{ 
